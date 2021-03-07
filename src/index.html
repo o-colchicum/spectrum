@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Spectrum</title>
+  <base href="/">
+  <meta name="mphtools-feature" content="compatibilityUI, cameraPrivacyPopup, compatibilityAutoCheck">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body class="mat-typography">
+  <app-root></app-root>
+
+  <div id="videoRec" style="display: none; background-color:rgba(15,76,129,1); height: 100%;">
+    
+    <button id="Group_182" onclick="changeURL()"">
+      <svg class="Rectangle_82">
+        <rect id="Rectangle_82" rx="10" ry="10" x="0" y="0" width="100" height="44.66">
+        </rect>
+      </svg>
+      <img id="iconfinder_undo-back-arrow_293" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADwAAAAvCAYAAAC/vqlHAAAABHNCSVQICAgIfAhkiAAABENJREFUaEPdmmmoVVUUgL9naYMpFRQVhP0yM6j80UxBkJAagmCEllKEltpAE01UFvUsUEEUwwkjirSBrIh6VBQFBQ0/CiKCHg0UURD00FfOyhf7xOl4hnv0Hs+5Z8GF92AP6zt777XWXmv3UV7GArcDdwJHAJuBh4E/yg91+Hv0lZzySOAN4Cog6rsP+BS4tORYtTQvA3wSsAG4OgYbV/py4ONaKEpM2inwaGBTgM0afibwaom5a2naCfDxwOvAZRkrq+LbgTOA32uhKDFpEfDpYRtfWQB7M/BciXlra1oErDG6MAdWg3UT8Czg342XLGBX1vN4fg7BHmABsK7xlDEF04BPDmf2ohyQrcCc0K6XeP/zpZHSJwAfAOfmUOwGrgG29BRpUDa+wuOBlwpg/wauB17rRVh1joDHAJ8BEwpAlgGf1ACrQdT1/Qb8DOwAdgK7yuoi8DhgADizbOea2gv5J/Ar8A3wIvAe4FErFIHXB9dS2LjBDb4CHgXeB7bl6SnwMHBsg2E6VU03OQhcB3yR1Ulgz4R+ty3yF7AU0N547v8nAt8BLAdGtIU4cKwC7koaNoGPAVYA81oG7BY3vp8fN2hxP7wSWJQTN/s9zG48UGQYKvhw6nk0cAowETAKvAA4J2RdsqbUdd0CbIwaxIHNZrjSxsdZMbb+0Damd+qWo0KW5WXgxBxlhD4P+NY2SbBR4cDfWgC9BritU99X8ZcxHH4CWJgzjxHktWnAUR8tnKuYt9JC3xPcWsVMHQ3/FHA34E5NiqtsFPlDFpDb5cGQjcyD9kzP6kid6huNBF4BpmdM9SFwRVECoB+4r8BleW82CTBUPVPhDBq1L4HTUlp68Tm7CNh++mkdedpWicbV/N/QkKzHvcDTKcdxr0nIToAF1V15rk28p4mD6Sb8unWLd3lTU8YXSenvBDjq5NZ+MgfapIBnqG7R0/wInJqiyEAZYFd3LrA2ZXvrn88CvqubNsz/AjA7RZdMK52ldxR7LwmRj+28h/r/Iw2BVY37g05JlYbLrHC88yTgobDSll/ebBCsqhhOPpOi0+6DBW4Y3wHqGENob7q2wk0HNr621pWUwTausFb6F8BqZ1LeaSOw1ZKPYkY1Dr24jcCeXe/sSTYTAlPaBmwxwWjvuDSD5Y2pTcC+PXk3hLhpRtVLzsy2AAv7NnBJhvv4J4SaQ70ObLg7A3gs5Lqy3KXJCoORzIzGofhZ61T+qhAXyOSEK+qtyEzrxQX3dZ9hWNT/qQrgG4HFgI9gqhKvq0L7K9qhXvonxwuARR3KKG1kY4TTFBHWRLwvFLyv/yvdBH4LmNoQWutlntnnk/p0E9gsQ94zicP1LT4PZ/vrtJRTN4GNcLyl1CFGUSbarTCsTiuiVbGlzRhaoM6rAnT7Y3g2fZHweHj2eEC1sMot7dha52mAL4G6uXsivU0l+dzBkqgvAL4v+4p3PwNztQpOL9OFAAAAAElFTkSuQmCC">
+        
+    </button>
+
+    <script src="https://sdk.morphcast.com/mphtools/v1.0/mphtools.js"></script>
+    <script src="https://ai-sdk.morphcast.com/v1.14/ai-sdk.js"></script>
+    <script>
+
+    function changeURL() 
+    {
+      console.log("it woooorks");
+      window.location.href = '/home';
+            //Set URL
+
+    }
+    listaEmotii = ['Disgust', 'Happy', 'Sad', 'Neutral', 'Surprise', 'Angry', 'Fear']
+
+    const config = {smoothness: 0.40, enableBalancer : false};
+    var emotie;
+    CY.loader()
+    .addModule(CY.modules().FACE_EMOTION.name, config)
+    .load()
+    .then(({ start, stop, terminate }) => {
+      start();
+    });
+
+    lastUpdate = new Date();
+
+    window.addEventListener(CY.modules().FACE_EMOTION.eventName, (evt) => {
+      emotie = evt.detail.output.dominantEmotion;
+      currentDate = new Date();
+
+      if(currentDate - lastUpdate >= 1500) {
+        for (var i = listaEmotii.length - 1; i >= 0; i--) {
+          if(emotie == listaEmotii[i]) {
+            document.getElementById(listaEmotii[i]).style.display = 'block'; 
+          }
+          else {
+            document.getElementById(listaEmotii[i]).style.display = 'none'; 
+          }
+        }
+        lastUpdate = currentDate;
+      }
+      
+    });
+    </script>
+    
+    <style> 
+      #Group_182 {
+          position: absolute;
+          width: 100px;
+          height: 44.66px;
+          left: 247px;
+          top: 40px;
+          overflow: visible;
+          transition: all 0.3s linear;
+          --web-animation: fadein 0.3s linear;
+          --web-action-type: page;
+          --web-action-target: Categorii Principale+Sunet.html;
+          cursor: pointer;
+      }
+      #Rectangle_82 {
+          fill: rgba(246,246,246,1);
+          stroke: rgba(112,112,112,1);
+          stroke-width: 2px;
+          stroke-linejoin: round;
+          stroke-linecap: butt;
+          stroke-miterlimit: 4;
+          shape-rendering: auto;
+      }
+      .Rectangle_82 {
+          filter: drop-shadow(3px 3px 3px rgba(0, 0, 0, 0.161));
+          position: absolute;
+          overflow: visible;
+          width: 109px;
+          height: 53.66px;
+          left: 0px;
+          top: 0px;
+      }
+      #iconfinder_undo-back-arrow_293 {
+          position: absolute;
+          width: 30px;
+          height: 23.215px;
+          left: 35px;
+          top: 11px;
+          overflow: visible;
+      }
+      #videoElement {
+        width: 100%;
+        background-color: rgba(15,76,129,1);
+        position: absolute;
+        top: 15vh;
+      }
+      button {
+        background-color: rgba(0,0,0,0);
+        border-color: rgba(0,0,0,0);
+      }
+    </style>
+    
+
+    <video autoplay="true" id="videoElement"></video>
+
+    
+
+    <div id="emojiuri" style="position: absolute; bottom: 10vh; left: 17vw; z-index: 9;">
+      <div id="Disgust" style="display: none">
+        <img src="assets/dezgustat.png" style="height: 250px; width: auto">
+      </div>
+
+      <div id='Happy' style="display: none">
+        <img src="assets/fericit.png" style="height: 250px; width: auto">
+      </div>
+
+      <div id= 'Sad' style="display: none">
+        <img src="assets/trist.png" style="height: 250px; width: auto">
+      </div>
+
+      <div id='Neutral' style="display: none">
+        <img src="assets/neutru.png" style="height: 250px; width: auto">
+      </div>
+
+      <div id='Surprise' style="display: none">
+        <img src="assets/surprins.png" style="height: 250px; width: auto">
+      </div>
+
+      <div id='Angry' style="display: none">
+        <img src="assets/nervos.png" style="height: 250px; width: auto">
+      </div>
+
+      <div id='Fear' style="display: none">
+        <img src="assets/infricosat.png" style="height: 250px; width: auto">
+      </div>
+    </div>
+    
+    <img src="./assets/bloc.jpg" style="    position: absolute; bottom: 3vh; z-index: 1; left: 0.5vw; height: 47%;">
+
+    <script>
+      
+      var video = document.querySelector("#videoElement");
+
+      if (navigator.mediaDevices.getUserMedia) {
+        navigator.mediaDevices.getUserMedia({ video: true })
+          .then(function (stream) {
+            video.srcObject = stream;
+          })
+          .catch(function (err0r) {
+            console.log("Something went wrong!");
+          });
+      }
+
+    </script>
+  </div> 
+
+</body>
+</html>
+
